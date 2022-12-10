@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign-Up</title>
+</head>
+
+<body>
+    <h1>Register</h1>
+
+    <form action="http://localhost:5001/registration" method="get">
+        <fieldset>
+            <label><strong>Name: </strong><input type="text" name="name" id="name" required></label>
+            <label><strong>Age: </strong><input type="number" name="age" id="age" required max="99"
+                    min="5"></label><br><br>
+            <label>Email: <input type="email" name="email" id="email" required></label><br>
+            <label>Username: </label>
+            <input type="text" id="username" name="username" required maxlength="20"><br><br>
+            <label>Password: </label>
+            <input type="password" name="password" id="password" required><br><br>
+
+            <input type="reset" value="Reset">
+            <input type="submit" value="Submit">
+        </fieldset>
+    </form>
+
+    <a href="http://localhost:5001/">HOME</a>
+</body>
+
+</html>
