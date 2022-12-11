@@ -58,7 +58,6 @@ app.get("/registration", async (request, response) => {
         const {name, age, email, username, password} = request.query 
         if (name && age && email && username && password) {
             let result = await lookUpByUsername(client, databaseAndCollection, username)
-            console.log(result)
             if (result) {
                 const variables = {
                     operation: "Error", 
