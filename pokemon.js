@@ -87,6 +87,7 @@ app.get("/login", (request, response) => {
         try {
             await client.connect();
             let result =  await lookUpByUsername(client, databaseAndCollection, request.query.username);
+            let back = "http://localhost:5001/"
             if (result) {
                 if (result.password == request.query.password) {
                     const variables = {
@@ -96,10 +97,20 @@ app.get("/login", (request, response) => {
                     user = result.username
                     response.render("login", variables)
                 } else {
-                    response.render("error")
+                    const variables = {
+                        operation: "Error",
+                        msg: "Incorrect password", 
+                        url: back
+                    }
+                    response.render("confirmationMsg", variables)
                 }
             } else {
-                response.render("error")
+                const variables = {
+                    operation: "Error",
+                    msg: "User does not exist", 
+                    url: back
+                }
+                response.render("confirmationMsg", variables)
             }
         
         } catch (e) {
