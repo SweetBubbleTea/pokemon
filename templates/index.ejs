@@ -3,29 +3,30 @@
 
 <head>
     <title>Pokemon Team Builder</title>
+    <link href="/public/css/pokemon.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <h1>Welcome to Pokemon Builder</h1>
+    <div class = "loginPageCenter">
+    <h1>Login</h1>
 
     <form action="http://localhost:5001/login" method="get">
-        <fieldset>
-            <legend>Login</legend>
-            <br>
-            <label>Username: </label>
-            <input type="text" name="username" id="username" required><br><br>
-            <label>Password: </label>
+        <div class = "textField">
+            <input type="text" name="username" id="username" required>
+            <span></span>
+            <label>Username </label>
+        </div>
+        <div class = "textField">
             <input type="password" name="password" id="password" required>
-
-            <br>
-            <br>
-            <br>
-            <a href="http://localhost:5001/registration">Sign-Up</a>
-            <input type="submit" value="Submit">
-            <br>
-            <br>
-        </fieldset>
+            <span></span>
+            <label>Password </label>
+        </div>
+            <input type="submit" value="Login">
+            <div class = "signup">
+            Not a member? <a href="http://localhost:5001/registration">Signup!</a>
+            </div> 
     </form>
+    </div>
 </body>
 
 </html>

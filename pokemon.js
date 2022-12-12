@@ -25,7 +25,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const res = require('express/lib/response');
 const { response } = require('express');
 
-const uri = "mongodb+srv://azhao21:CMSC335stuff@cluster0.f1xttpg.mongodb.net/?retryWrites=true&w=majority" 
+const uri = "mongodb+srv://maojq:Mao12345.@cluster0.selgppz.mongodb.net/?retryWrites=true&w=majority" 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 }); 
 
 
@@ -45,6 +45,9 @@ process.stdin.on("readable", function () {
             process.stdin.resume(); 
         }  
 }); 
+
+app.use('/public', express.static('public'));
+app.use( express.static( "images" ) );
 
 app.get("/", (request, response) => {
     response.render("index")

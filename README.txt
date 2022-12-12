@@ -1,6 +1,6 @@
 Team Members: 
     Andy Zhao (azhao21), 
-    Mao Jun Qiu ()
+    Mao Jun Qiu (mqiu)
 App Descrption: 
     This project is a web program running through node.js that allows you to personalize your pokemon team. 
 API Links: 
