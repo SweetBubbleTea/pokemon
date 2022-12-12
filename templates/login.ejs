@@ -15,13 +15,13 @@
     <form action="http://localhost:5001/addPokemon" method="post">
         <legend>General Setting</legend>
         <label>Add Pokemon: <input type="text" name="pokemonAdd" id="pokemonAdd"></label>
-        <input type="submit" value="Add Pokemon">
+        <input type="submit" value="Add Pokemon" onclick="confirmMsg('add')">
     </form>
 
     <form action="http://localhost:5001/removePokemon" method="post">
         <legend>General Setting</legend>
         <label>Remove Pokemon: <input type="text" name="pokemonRemove" id="pokemonRemove"></label>
-        <input type="submit" value="Remove Pokemon">
+        <input type="submit" value="Remove Pokemon" onclick="confirmMsg('delete')">
     </form>
 
     <form action="http://localhost:5001/lookUp" method="post">
@@ -37,6 +37,12 @@
     </form>
 
     <a href="http://localhost:5001/">Log Out</a>
+
+    <script>
+        function confirmMsg(method) {
+            window.confirm("Are you sure you want to " + method + " this pokemon? \nYou will not be able to change your information once submitted")
+        }
+    </script>
 </body>
 
 </html>

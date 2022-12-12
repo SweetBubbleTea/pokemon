@@ -38,12 +38,18 @@
             <label>Password </label>
         </div>
 
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" onclick="confirmMsg()">
             <div class = "signup">
                 Already a member? <a href="http://localhost:5001/">Login!</a>
-                </div> 
+            </div> 
     </form>
-    </div>
+</div>
+
+    <script>
+        function confirmMsg() {
+            window.confirm("Are you sure you want to submit your application? \nYou will not be able to change your information once submitted")
+        }
+    </script>
 </body>
 
 </html>
