@@ -25,7 +25,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const res = require('express/lib/response');
 const { response } = require('express');
 
-const uri = "mongodb+srv://maojq:Mao12345.@cluster0.selgppz.mongodb.net/?retryWrites=true&w=majority" 
+const uri = "mongodb+srv://azhao21:CMSC335stuff@cluster0.f1xttpg.mongodb.net/?retryWrites=true&w=majority" 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 }); 
 
 
@@ -71,7 +71,7 @@ app.get("/registration", async (request, response) => {
             } else {
                 let app = {name: name, age: age, email: email, username: username, password: password, team: []}
                 await insertApp(client, databaseAndCollection, app)
-                response.render("signup")
+                response.render("index")
             }
         } else {
             response.render("signup")

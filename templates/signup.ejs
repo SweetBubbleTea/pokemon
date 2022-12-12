@@ -3,24 +3,24 @@
 
 <head>
     <title>Sign-Up</title>
-    <link href="/public/css/pokemon2.css" rel="stylesheet" type="text/css">
+    <link href="/public/css/register.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <div class = "loginPageCenter">
+    <div class = "registerPageCenter">
     <h1>Register</h1>
 
-    <form action="http://localhost:5001/" method="get">
-        <div class = "textField">
+    <form action="http://localhost:5001/registration" method="get">
+        <div class = "textField" id = "textFieldName">
             <input type="text" name="name" id="name" required>
             <span></span>
-            <label><strong>Name </strong></label>
+            <label>Name </label>
         </div>
         <div class = "textField" id = "textFieldAge">
         <input type="number" name="age" id="age" required max="99"
                     min="5">
                     <span></span>
-            <label><strong>Age </strong></label>
+            <label>Age </label>
         </div>
         <div class = "textField">
         <input type="email" name="email" id="email" required>

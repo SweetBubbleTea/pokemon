@@ -3,40 +3,55 @@
 
 <head>
     <title>Welcome <%- name %></title>
+    <link href="/public/css/main.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <h1>Welcome <%- name %></h1>
+    <div class = "mainPageCenter">
+    <h1>Hello <%- name %>! Welcome to PokeBuilder</h1>
 
     <div>
         <%- team %>
     </div>
 
     <form action="http://localhost:5001/addPokemon" method="post">
-        <legend>General Setting</legend>
-        <label>Add Pokemon: <input type="text" name="pokemonAdd" id="pokemonAdd"></label>
-        <input type="submit" value="Add Pokemon" onclick="confirmMsg('add')">
+        <div class = "textField">
+            <input type="text" name="pokemonAdd" id="pokemonAdd" required>
+            <span></span>
+            <label>Pokemon</label>
+        </div>
+        <input type="submit" value="Add" onclick="confirmMsg('add')">
     </form>
 
     <form action="http://localhost:5001/removePokemon" method="post">
-        <legend>General Setting</legend>
-        <label>Remove Pokemon: <input type="text" name="pokemonRemove" id="pokemonRemove"></label>
-        <input type="submit" value="Remove Pokemon" onclick="confirmMsg('delete')">
+        <div class = "textField">
+            <input type="text" name="pokemonRemove" id="pokemonRemove" required>
+            <span></span>
+            <label>Pokemon</label>
+        </div>
+            <input type="submit" value="Remove" onclick="confirmMsg('delete')">
     </form>
 
     <form action="http://localhost:5001/lookUp" method="post">
-        <legend>General Setting</legend>
-        <label>Look Up User's Team: <input type="text" name="lookUp" id="lookUp" placeholder="username"></label>
-        <input type="submit" value="Look Up">
+        <div class = "textField">
+        <input type="text" name="lookUp" id="lookUp" required>
+        <span></span>
+        <label>Username</label>
+        </div>
+        <input type="submit" value="Find Team">
     </form>
 
     <form action="http://localhost:5001/isAPokemon" method="post">
-        <legend>General Setting</legend>
-        <label>Is A Pokemon?: <input type="text" name="query" id="query" placeholder="query"></label>
+        <div class = "textField">
+            <input type="text" name="query" id="query" required>
+            <span></span>
+        <label>Pokemon</label>
+        </div>
         <input type="submit" value="Query">
     </form>
 
     <a href="http://localhost:5001/">Log Out</a>
+</div>
 
     <script>
         function confirmMsg(method) {

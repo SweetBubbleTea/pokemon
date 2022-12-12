@@ -9,27 +9,33 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
 }
-.loginPageCenter{
+.mainPageCenter{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 600px;
-    height: 560px;
+    width: 950px;
+    height: 620px;
     background:white;
     border-radius: 10px;
 }
-.loginPageCenter h1{
+.mainPageCenter h1{
     text-align: center;
     padding: 0 0 20px 0;
     border-bottom: 1px solid silver;
 }
-.loginPageCenter form{
+.mainPageCenter form{
     padding: 0 40px;
     box-sizing: content-box;
 }
 div.textField{
-    width: 280px;
+    width: 290px;
+    display: inline-block;
+}
+#textFieldName{
+    width: 430px;
+}
+form {
     display: inline-block;
 }
 form .textField{
@@ -77,7 +83,7 @@ form .textField{
 }
 
 #textFieldAge{
-    width: 50px;
+    width: 55px;
     display: inline-block;
     margin-left: 20px;
 }
@@ -87,12 +93,12 @@ form .textField{
 }
 
 input[type="submit"]{
-    width: 100%;
-    height: 50px;
+    width: 90px;
+    height: 40px;
     border: 1px solid;
     background: #2691d9;
     border-radius: 25px;
-    font-size: 18px;
+    font-size: 11px;
     color: #e9f4fb;
     font-weight: 700;
     cursor: pointer;
