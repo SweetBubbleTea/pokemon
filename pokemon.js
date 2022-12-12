@@ -5,6 +5,8 @@ const express = require("express");
 const bodyParser = require("body-parser"); 
 const app = express();  
 const portNumber = 5001; 
+const GRAMS_TO_POUNDS = 0.00220462
+const METER_TO_FEET = 3.28
 let user; 
 
 process.stdin.setEncoding("utf8"); 
@@ -79,7 +81,6 @@ app.get("/registration", async (request, response) => {
     } finally {
         await client.close()
     }
- 
 })
  
 app.get("/login", async (request, response) => {
@@ -157,7 +158,7 @@ app.post("/addPokemon", async (request, response) => {
                     } else {
                         await insertPokemon(client, databaseAndCollection, user, newValues)
                         let pokedex = await status.json()
-                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
+                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"300\" height=\"300\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
                         const variables = {
                             operation: "Success",
                             msg: msg, 
@@ -200,9 +201,13 @@ app.post("/removePokemon", async (request, response) => {
                 let newValues = {team: pokemon} 
                 if (result.team.includes(pokemon)) {
                     await removePokemon(client, databaseAndCollection, user, newValues)
+                    let url = "https://pokeapi.co/api/v2/pokemon/" + pokemon
+                    const status = await fetch (url)
+                    let pokedex = await status.json()
+                    let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"300\" height=\"300\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " released to the wild!</p>"
                     const variables = {
                         operation: "Success",
-                        msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " removed successfully!", 
+                        msg: msg, 
                         url: back
                     }
                     response.render("confirmationMsg", variables)
@@ -283,7 +288,7 @@ app.post("/isAPokemon", async (request, response) => {
             response.render("confirmationMsg", variables)
         } else {
             let pokedex = await status.json()
-            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"150\" height=\"150\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!</p>"
+            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"300\" height=\"300\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!</p>"
 
             const variables = {
                 operation: "Success",
@@ -313,6 +318,8 @@ app.post("/pokedex", async (request, response) => {
             response.render("confirmationMsg", variables)
         } else {
             let pokedex = await status.json()
+            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"300\" height=\"300\"><br>"
+
             let types = []
             
             pokedex.types.forEach(element => {
@@ -320,13 +327,17 @@ app.post("/pokedex", async (request, response) => {
             });
 
             const variables = {
-                img: pokedex.sprites.other.dream_world.front_default, 
+                img: msg, 
                 name: pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1), 
-                hp: pokedex.stats[0].base_stat + "/" + pokedex.stats[0].base_stat, 
+                hp: pokedex.stats[0].base_stat, 
+                attack: pokedex.stats[1].base_stat, 
+                defense: pokedex.stats[2].base_stat, 
+                speed: pokedex.stats[5].base_stat,
                 xp: pokedex.base_experience, 
+                ability: pokedex.abilities[0].ability.name.charAt(0).toUpperCase() + pokedex.abilities[0].ability.name.slice(1), 
                 types: types.join(' / '), 
-                weight: pokedex.weight + "kg", 
-                height: pokedex.weight + "m", 
+                weight: Math.round(pokedex.weight * 1000 * GRAMS_TO_POUNDS) / 10 + "kg", 
+                height: Math.floor((pokedex.height/10) * METER_TO_FEET) + "ft " + Math.round((((pokedex.height/10) * METER_TO_FEET) % 1).toFixed(2) * 10) + "in", 
                 url: back 
             }
             response.render("pokedex", variables)
