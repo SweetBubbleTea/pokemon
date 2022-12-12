@@ -15,13 +15,15 @@
     <form action="http://localhost:5001/addPokemon" method="post">
         <legend>General Setting</legend>
         <label>Add Pokemon: <input type="text" name="pokemonAdd" id="pokemonAdd" required></label>
-        <input type="submit" value="Add Pokemon">
+        <input type="submit" value="Add Pokemon"
+            onclick="confirmMsg('Are you sure you want to add this pokemon to your team?')">
     </form>
 
     <form action="http://localhost:5001/removePokemon" method="post">
         <legend>General Setting</legend>
         <label>Remove Pokemon: <input type="text" name="pokemonRemove" id="pokemonRemove" required></label>
-        <input type="submit" value="Remove Pokemon">
+        <input type="submit" value="Remove Pokemon"
+            onclick="confirmMsg('Are you sure you want to delete this pokemon?')">
     </form>
 
     <form action="http://localhost:5001/lookUp" method="post">
@@ -34,7 +36,7 @@
     <form action="http://localhost:5001/isAPokemon" method="post">
         <legend>General Setting</legend>
         <label>Is A Pokemon?: <input type="text" name="query" id="query" placeholder="query" required></label>
-        <input type="submit" value="Query">
+        <input type="submit" value="Query" id="isPokemon">
     </form>
 
     <form action="http://localhost:5001/pokedex" method="post">
@@ -43,7 +45,18 @@
         <input type="submit" value="Query">
     </form>
 
-    <a href="http://localhost:5001/">Log Out</a>
+    <a href="http://localhost:5001/" onclick="confirmMsg('Are you sure you want to log out?')">Log Out</a>
+
+    <script>
+        function confirmMsg(msg) {
+            if (window.confirm(msg)) {
+                return true
+            } else {
+                event.stopPropagation()
+                event.preventDefault()
+            }
+        }
+    </script>
 </body>
 
 </html>
