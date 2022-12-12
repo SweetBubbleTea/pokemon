@@ -14,25 +14,32 @@
 
     <form action="http://localhost:5001/addPokemon" method="post">
         <legend>General Setting</legend>
-        <label>Add Pokemon: <input type="text" name="pokemonAdd" id="pokemonAdd"></label>
+        <label>Add Pokemon: <input type="text" name="pokemonAdd" id="pokemonAdd" required></label>
         <input type="submit" value="Add Pokemon" onclick="confirmMsg('add')">
     </form>
 
     <form action="http://localhost:5001/removePokemon" method="post">
         <legend>General Setting</legend>
-        <label>Remove Pokemon: <input type="text" name="pokemonRemove" id="pokemonRemove"></label>
+        <label>Remove Pokemon: <input type="text" name="pokemonRemove" id="pokemonRemove" required></label>
         <input type="submit" value="Remove Pokemon" onclick="confirmMsg('delete')">
     </form>
 
     <form action="http://localhost:5001/lookUp" method="post">
         <legend>General Setting</legend>
-        <label>Look Up User's Team: <input type="text" name="lookUp" id="lookUp" placeholder="username"></label>
+        <label>Look Up User's Team: <input type="text" name="lookUp" id="lookUp" placeholder="username"
+                required></label>
         <input type="submit" value="Look Up">
     </form>
 
     <form action="http://localhost:5001/isAPokemon" method="post">
         <legend>General Setting</legend>
-        <label>Is A Pokemon?: <input type="text" name="query" id="query" placeholder="query"></label>
+        <label>Is A Pokemon?: <input type="text" name="query" id="query" placeholder="query" required></label>
+        <input type="submit" value="Query">
+    </form>
+
+    <form action="http://localhost:5001/pokedex" method="post">
+        <legend>General Setting</legend>
+        <label>Pokedex: <input type="text" name="pokedex" id="pokedex" required></label>
         <input type="submit" value="Query">
     </form>
 
