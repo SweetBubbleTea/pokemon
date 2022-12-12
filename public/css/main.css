@@ -128,3 +128,10 @@ display: flex;
 align-items: center;
 justify-content: center;
 }
+
+#logoutButton{
+    font-weight: bold;
+    position: fixed;
+    top: 92%;
+    left: 47%;
+}

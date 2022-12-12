@@ -160,7 +160,7 @@ app.post("/addPokemon", async (request, response) => {
                     } else {
                         await insertPokemon(client, databaseAndCollection, user, newValues)
                         let pokedex = await status.json()
-                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
+                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "width=\"220\" height=\"220\">\<br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
                         const variables = {
                             operation: "Success",
                             msg: msg, 

@@ -3,10 +3,11 @@
 
 <head>
     <title>Pokedex</title>
+    <link href="/public/css/pokedex.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <div>
+    <div class = "pokedexPageCenter">
         <img src="<%- img %>" alt="<%- name %>"><br>
         <strong>Name: </strong><%- name %><br>
             <strong>HP: </strong><%- hp %><br>
@@ -14,11 +15,10 @@
                     <strong>Types(s): </strong><%- types %><br>
                         <strong>Weight: </strong><%- weight %><br>
                             <strong>Height: </strong><%- height %><br>
-    </div>
 
-    <br>
 
     <a href="<%- url %>">Back</a>
+</div>
 </body>
 
 </html>
