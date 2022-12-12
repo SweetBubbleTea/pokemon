@@ -8,9 +8,9 @@
 
 <body>
     <div class = "mainPageCenter">
-    <h1>Hello <%- name %>! Welcome to PokeBuilder</h1>
+    <h1>Hello, <%- name %>! Welcome to PokéBuilder</h1>
 
-    <div>
+    <div id = "images">
         <%- team %>
     </div>
 
@@ -18,18 +18,18 @@
         <div class = "textField">
             <input type="text" name="pokemonAdd" id="pokemonAdd" required>
             <span></span>
-            <label>Pokemon</label>
+            <label>Pokémon</label>
         </div>
-        <input type="submit" value="Add" onclick="confirmMsg('add')">
+        <input type="submit" value="Add">
     </form>
 
     <form action="http://localhost:5001/removePokemon" method="post">
         <div class = "textField">
             <input type="text" name="pokemonRemove" id="pokemonRemove" required>
             <span></span>
-            <label>Pokemon</label>
+            <label>Pokémon</label>
         </div>
-            <input type="submit" value="Remove" onclick="confirmMsg('delete')">
+            <input type="submit" value="Remove">
     </form>
 
     <form action="http://localhost:5001/lookUp" method="post">
@@ -45,19 +45,23 @@
         <div class = "textField">
             <input type="text" name="query" id="query" required>
             <span></span>
-        <label>Pokemon</label>
+        <label>Pokémon</label>
         </div>
         <input type="submit" value="Query">
+        </form>
+
+    <form action="http://localhost:5001/pokedex" method="post">
+        <div class = "textField">
+            <input type="text" name="pokedex" id="pokedex" required>
+            <span></span>
+        <label>Pokémon</label>
+        </div>
+        <input type="submit" value="Check Pokédex">
     </form>
 
-    <a href="http://localhost:5001/">Log Out</a>
+    <a href="http://localhost:5001/">Log out</a>
 </div>
 
-    <script>
-        function confirmMsg(method) {
-            window.confirm("Are you sure you want to " + method + " this pokemon? \nYou will not be able to change your information once submitted")
-        }
-    </script>
 </body>
 
 </html>

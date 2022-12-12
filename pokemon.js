@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 require("dotenv").config({ path: path.resolve(__dirname, 'config/.env') })  
 
-const userName = process.env.MONGO_DB_USERNAME; 
+const username = process.env.MONGO_DB_USERNAME; 
 const password = process.env.MONGO_DB_PASSWORD; 
 const db = process.env.MONGO_DB_NAME; 
 const collection = process.env.MONGO_COLLECTION;
@@ -25,7 +25,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const res = require('express/lib/response');
 const { response } = require('express');
 
-const uri = "mongodb+srv://azhao21:CMSC335stuff@cluster0.f1xttpg.mongodb.net/?retryWrites=true&w=majority" 
+const uri = `mongodb+srv://${username}:${password}@cluster0.f1xttpg.mongodb.net/?retryWrites=true&w=majority`
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 }); 
 
 
@@ -50,6 +50,7 @@ app.use('/public', express.static('public'));
 app.use( express.static( "images" ) );
 
 app.get("/", (request, response) => {
+    user = ""
     response.render("index")
 })
 
@@ -84,46 +85,54 @@ app.get("/registration", async (request, response) => {
  
 })
  
-app.get("/login", (request, response) => {
+app.get("/login", async (request, response) => {
 
-    async function main() {
-        try {
-            await client.connect();
-            let result =  await lookUpByUsername(client, databaseAndCollection, request.query.username);
-            let back = "http://localhost:5001/"
-            if (result) {
-                if (result.password == request.query.password) {
-                    const variables = {
-                        name: result.name, 
-                        team: result.team
-                    }
-                    user = result.username
-                    response.render("login", variables)
-                } else {
-                    const variables = {
-                        operation: "Error",
-                        msg: "Incorrect password", 
-                        url: back
-                    }
-                    response.render("confirmationMsg", variables)
+    try {
+        await client.connect();
+        let result =  await lookUpByUsername(client, databaseAndCollection, request.query.username);
+        let back = "http://localhost:5001/"
+        if (result) {
+            if (result.password == request.query.password) {
+                let msg = ""
+
+                for (let i = 0; i < result.team.length; i++) {
+                    let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
+                    const status = await fetch (url)
+                    let pokedex = await status.json()
+                    let src = pokedex.sprites.other.dream_world.front_default
+                    let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+                    msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
                 }
+
+                const variables = {
+                    name: result.name, 
+                    team: msg + "<br><br>"
+                }
+                user = result.username
+                response.render("login", variables)
             } else {
                 const variables = {
                     operation: "Error",
-                    msg: "User does not exist", 
+                    msg: "Incorrect password", 
                     url: back
                 }
                 response.render("confirmationMsg", variables)
             }
-        
-        } catch (e) {
-            console.error(e);
-        } finally {
-            await client.close();
+        } else {
+            const variables = {
+                operation: "Error",
+                msg: "User does not exist", 
+                url: back
+            }
+            response.render("confirmationMsg", variables)
         }
+    
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await client.close();
     }
 
-    main().catch(console.error())
 })
 
 app.post("/addPokemon", async (request, response) => {
@@ -150,9 +159,11 @@ app.post("/addPokemon", async (request, response) => {
                         response.render("confirmationMsg", variables)
                     } else {
                         await insertPokemon(client, databaseAndCollection, user, newValues)
+                        let pokedex = await status.json()
+                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
                         const variables = {
                             operation: "Success",
-                            msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!", 
+                            msg: msg, 
                             url: back
                         }
                         response.render("confirmationMsg", variables)
@@ -228,9 +239,21 @@ app.post("/lookUp", async (request, response) => {
         let back = "http://localhost:5001/login?username=" + signIn.username + "&password=" + signIn.password
         let result = await lookUpByUsername(client, databaseAndCollection, request.body.lookUp) 
         if (result) {
+
+            let msg = ""
+
+            for (let i = 0; i < result.team.length; i++) {
+                let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
+                const status = await fetch (url)
+                let pokedex = await status.json()
+                let src = pokedex.sprites.other.dream_world.front_default
+                let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+                msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"150\" height=\"150\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
+            }
+
             const variables = {
                 operation: lookUp.charAt(0) + lookUp.slice(1) + "'s Team", 
-                msg: result.team, 
+                msg: lookUp.charAt(0) + lookUp.slice(1) + "'s Team<br><br>" + msg, 
                 url: back
             }
             response.render("confirmationMsg", variables) 
@@ -262,12 +285,54 @@ app.post("/isAPokemon", async (request, response) => {
             }
             response.render("confirmationMsg", variables)
         } else {
+            let pokedex = await status.json()
+            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"150\" height=\"150\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!</p>"
+
             const variables = {
                 operation: "Success",
-                msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!", 
+                msg: msg, 
                 url: back
             }
             response.render("confirmationMsg", variables)
+        }
+    }
+})
+
+app.post("/pokedex", async (request, response) => {
+    if (request.body.pokedex) {
+        pokemon = request.body.pokedex.toLowerCase() 
+        let url = "https://pokeapi.co/api/v2/pokemon/" + pokemon
+        await client.connect();
+        let signIn = await lookUpByUsername(client, databaseAndCollection, user) 
+        let back = "http://localhost:5001/login?username=" + signIn.username + "&password=" + signIn.password
+        let status = await fetch(url)
+        
+        if (status.status == 404 || status.statusText == "Not Found") {
+            const variables = {
+                operation: "Error",
+                msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!", 
+                url: back
+            }
+            response.render("confirmationMsg", variables)
+        } else {
+            let pokedex = await status.json()
+            let types = []
+            
+            pokedex.types.forEach(element => {
+                types.push(element.type.name.charAt(0).toUpperCase() + element.type.name.slice(1))
+            });
+
+            const variables = {
+                img: pokedex.sprites.other.dream_world.front_default, 
+                name: pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1), 
+                hp: pokedex.stats[0].base_stat + "/" + pokedex.stats[0].base_stat, 
+                xp: pokedex.base_experience, 
+                types: types.join(' / '), 
+                weight: pokedex.weight + "kg", 
+                height: pokedex.weight + "m", 
+                url: back 
+            }
+            response.render("pokedex", variables)
         }
     }
 })
