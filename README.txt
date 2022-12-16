@@ -6,5 +6,7 @@ App Descrption:
 API Links: 
     https://pokeapi.co/docs/v2
 YouTube Demo Link: 
-    
+    https://youtu.be/LgNwfYiguX4
+Deploy Link: 
+    https://pokemon-ktt5.onrender.com
 

@@ -1,4 +1,5 @@
 html {
+    font-family: sans-serif;
 }
 body {
     margin: 0;
@@ -32,9 +33,23 @@ body {
     box-sizing: border-box;
 }
 
-#backButton{
-    font-weight: bold;
+#backButton {
     position: fixed;
-    top: 93%;
-    left: 47%;
+    top: 87%;
+    left: 45%;
+    padding: 15px 25px;
+    background-color: #2691d9;
+    border: 1px solid;
+    color: #e9f4fb;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+
+#backButton:hover {
+    border-color: #2691d9;
+    transition: .5s;
 }
