@@ -14,7 +14,7 @@
             <%- team %>
         </div>
 
-        <form action="http://localhost:5001/addPokemon" method="post">
+        <form action="/addPokemon" method="post">
             <div class="textField">
                 <input type="text" name="pokemonAdd" id="pokemonAdd" required>
                 <span></span>
@@ -24,7 +24,7 @@
                 onclick="confirmMsg('Are you sure you want to add this Pokemon to your team?')">
         </form>
 
-        <form action="http://localhost:5001/removePokemon" method="post">
+        <form action="/removePokemon" method="post">
             <div class="textField">
                 <input type="text" name="pokemonRemove" id="pokemonRemove" required>
                 <span></span>
@@ -33,7 +33,7 @@
             <input type="submit" value="Remove" onclick="confirmMsg('Are you sure you want to release this Pokemon?')">
         </form>
 
-        <form action="http://localhost:5001/lookUp" method="post">
+        <form action="/lookUp" method="post">
             <div class="textField">
                 <input type="text" name="lookUp" id="lookUp" required>
                 <span></span>
@@ -42,7 +42,7 @@
             <input type="submit" value="Find Team">
         </form>
 
-        <form action="http://localhost:5001/isAPokemon" method="post">
+        <form action="/isAPokemon" method="post">
             <div class="textField">
                 <input type="text" name="query" id="query" required>
                 <span></span>
@@ -51,7 +51,7 @@
             <input type="submit" value="Is Pokemon?">
         </form>
 
-        <form action="http://localhost:5001/pokedex" method="post">
+        <form action="/pokedex" method="post">
             <div class="textField">
                 <input type="text" name="pokedex" id="pokedex" required>
                 <span></span>
