@@ -2,12 +2,13 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    font-family: sans-serif;
     background: url(../images/pokemonBackground.jpg) center fixed;
     background-size: cover;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
 }
 .mainPageCenter{
     position: absolute;
@@ -124,14 +125,28 @@ input[type="submit"]:hover{
 }
 
 #images{
-display: flex;
-align-items: center;
-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #logoutButton{
-    font-weight: bold;
     position: fixed;
-    top: 92%;
+    top: 90%;
     left: 47%;
+    padding: 15px 25px;
+    background-color: #2691d9;
+    border: 1px solid;
+    color: #e9f4fb;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+
+#logoutButton:hover{
+    border-color: #2691d9;
+    transition: .5s;
 }

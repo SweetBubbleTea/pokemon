@@ -7,61 +7,73 @@
 </head>
 
 <body>
-    <div class = "mainPageCenter">
-    <h1>Hello, <%- name %>! Welcome to PokéBuilder</h1>
+    <div class="mainPageCenter">
+        <h1>Hello, <%- name %>! Welcome to PokéBuilder</h1>
 
-    <div id = "images">
-        <%- team %>
-    </div>
-
-    <form action="http://localhost:5001/addPokemon" method="post">
-        <div class = "textField">
-            <input type="text" name="pokemonAdd" id="pokemonAdd" required>
-            <span></span>
-            <label>Pokémon</label>
+        <div id="images">
+            <%- team %>
         </div>
-        <input type="submit" value="Add">
-    </form>
 
-    <form action="http://localhost:5001/removePokemon" method="post">
-        <div class = "textField">
-            <input type="text" name="pokemonRemove" id="pokemonRemove" required>
-            <span></span>
-            <label>Pokémon</label>
-        </div>
-            <input type="submit" value="Remove">
-    </form>
-
-    <form action="http://localhost:5001/lookUp" method="post">
-        <div class = "textField">
-        <input type="text" name="lookUp" id="lookUp" required>
-        <span></span>
-        <label>Username</label>
-        </div>
-        <input type="submit" value="Find Team">
-    </form>
-
-    <form action="http://localhost:5001/isAPokemon" method="post">
-        <div class = "textField">
-            <input type="text" name="query" id="query" required>
-            <span></span>
-        <label>Pokémon</label>
-        </div>
-        <input type="submit" value="Query">
+        <form action="http://localhost:5001/addPokemon" method="post">
+            <div class="textField">
+                <input type="text" name="pokemonAdd" id="pokemonAdd" required>
+                <span></span>
+                <label>Pokémon</label>
+            </div>
+            <input type="submit" value="Add"
+                onclick="confirmMsg('Are you sure you want to add this Pokemon to your team?')">
         </form>
 
-    <form action="http://localhost:5001/pokedex" method="post">
-        <div class = "textField">
-            <input type="text" name="pokedex" id="pokedex" required>
-            <span></span>
-        <label>Pokémon</label>
-        </div>
-        <input type="submit" value="Check Pokédex">
-    </form>
+        <form action="http://localhost:5001/removePokemon" method="post">
+            <div class="textField">
+                <input type="text" name="pokemonRemove" id="pokemonRemove" required>
+                <span></span>
+                <label>Pokémon</label>
+            </div>
+            <input type="submit" value="Remove" onclick="confirmMsg('Are you sure you want to release this Pokemon?')">
+        </form>
 
-    <a id = "logoutButton" href="http://localhost:5001/">Log out</a>
-</div>
+        <form action="http://localhost:5001/lookUp" method="post">
+            <div class="textField">
+                <input type="text" name="lookUp" id="lookUp" required>
+                <span></span>
+                <label>Username</label>
+            </div>
+            <input type="submit" value="Find Team">
+        </form>
 
+        <form action="http://localhost:5001/isAPokemon" method="post">
+            <div class="textField">
+                <input type="text" name="query" id="query" required>
+                <span></span>
+                <label>Pokémon</label>
+            </div>
+            <input type="submit" value="Is Pokemon?">
+        </form>
+
+        <form action="http://localhost:5001/pokedex" method="post">
+            <div class="textField">
+                <input type="text" name="pokedex" id="pokedex" required>
+                <span></span>
+                <label>Pokémon</label>
+            </div>
+            <input type="submit" value="Check Pokédex">
+        </form>
+
+        <a href="http://localhost:5001/" id="logoutButton" onclick="confirmMsg('Are you sure you want to log out?')">Log
+            Out</a>
+    </div>
+
+    <script>
+        function confirmMsg(msg) {
+            if (window.confirm(msg)) {
+                return true
+            } else {
+                event.stopPropagation()
+                event.preventDefault()
+            }
+        }
+    </script>
 </body>
 
 </html>

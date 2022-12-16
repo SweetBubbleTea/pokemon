@@ -3,9 +3,13 @@ const http = require("http");
 const path = require("path"); 
 const express = require("express"); 
 const bodyParser = require("body-parser"); 
+const alert = require('alert'); 
 const app = express();  
 const portNumber = 5001; 
+const GRAMS_TO_POUNDS = 0.00220462
+const METER_TO_FEET = 3.28
 let user; 
+let loginName; 
 
 process.stdin.setEncoding("utf8"); 
 app.set("views", path.resolve(__dirname, "templates")); 
@@ -46,8 +50,8 @@ process.stdin.on("readable", function () {
         }  
 }); 
 
-app.use('/public', express.static('public'));
-app.use( express.static( "images" ) );
+app.use('/public', express.static('public'))
+app.use(express.static("images"))
 
 app.get("/", (request, response) => {
     user = ""
@@ -63,15 +67,12 @@ app.get("/registration", async (request, response) => {
         if (name && age && email && username && password) {
             let result = await lookUpByUsername(client, databaseAndCollection, username)
             if (result) {
-                const variables = {
-                    operation: "Error", 
-                    msg: "Username already exists", 
-                    url: "http://localhost:5001/registration" 
-                }
-                response.render("confirmationMsg", variables)
+                alert("Username already exists!")
+                response.render("registration")
             } else {
                 let app = {name: name, age: age, email: email, username: username, password: password, team: []}
                 await insertApp(client, databaseAndCollection, app)
+                alert("Account made successfully!")
                 response.render("index")
             }
         } else {
@@ -82,7 +83,6 @@ app.get("/registration", async (request, response) => {
     } finally {
         await client.close()
     }
- 
 })
  
 app.get("/login", async (request, response) => {
@@ -90,41 +90,26 @@ app.get("/login", async (request, response) => {
     try {
         await client.connect();
         let result =  await lookUpByUsername(client, databaseAndCollection, request.query.username);
+        if (result) {
+            loginName = result.name
+        }
         let back = "http://localhost:5001/"
         if (result) {
             if (result.password == request.query.password) {
-                let msg = ""
-
-                for (let i = 0; i < result.team.length; i++) {
-                    let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
-                    const status = await fetch (url)
-                    let pokedex = await status.json()
-                    let src = pokedex.sprites.other.dream_world.front_default
-                    let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
-                    msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
-                }
 
                 const variables = {
                     name: result.name, 
-                    team: msg + "<br><br>"
+                    team: await findTeam(result)
                 }
                 user = result.username
                 response.render("login", variables)
             } else {
-                const variables = {
-                    operation: "Error",
-                    msg: "Incorrect password", 
-                    url: back
-                }
-                response.render("confirmationMsg", variables)
+                alert("Incorrect password")
+                response.render("index")
             }
         } else {
-            const variables = {
-                operation: "Error",
-                msg: "User does not exist", 
-                url: back
-            }
-            response.render("confirmationMsg", variables)
+            alert("User does not exist!")
+            response.render("index")
         }
     
     } catch (e) {
@@ -151,38 +136,38 @@ app.post("/addPokemon", async (request, response) => {
                 if (!result.team.includes(pokemon)) {
                     const status = await fetch (url)
                     if (status.status == 404 || status.statusText == "Not Found") {
+                        alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!")
                         const variables = {
-                            operation: "Error",
-                            msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!", 
-                            url: back
+                            name: loginName, 
+                            team: await findTeam(result)
                         }
-                        response.render("confirmationMsg", variables)
+                        response.render("login", variables)   
                     } else {
                         await insertPokemon(client, databaseAndCollection, user, newValues)
-                        let pokedex = await status.json()
-                        let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "width=\"220\" height=\"220\">\<br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " added successfully!</p>"
+                        alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is added to your team!")
+                        
                         const variables = {
-                            operation: "Success",
-                            msg: msg, 
-                            url: back
+                            name: result.name, 
+                            team: await findTeamAdd(result, pokemon)
                         }
-                        response.render("confirmationMsg", variables)
+
+                        response.render("login", variables)
                     } 
                 } else {
+                    alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is already in your team!")
                     const variables = {
-                        operation: "Error",
-                        msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is already in your team!", 
-                        url: back
+                        name: loginName, 
+                        team: await findTeam(result)
                     }
-                    response.render("confirmationMsg", variables)
+                    response.render("login", variables)
                 }
-            } else {
+            } else { 
+                alert("Your party is full!")
                 const variables = {
-                    operation: "Error", 
-                    msg: "You have no more empty spaces to add Pokemon!",
-                    url: back
+                    name: loginName, 
+                    team: await findTeam(result)
                 }
-                response.render("confirmationMsg", variables) 
+                response.render("login", variables)
             }
         }
     } catch (e) {
@@ -203,27 +188,29 @@ app.post("/removePokemon", async (request, response) => {
                 let newValues = {team: pokemon} 
                 if (result.team.includes(pokemon)) {
                     await removePokemon(client, databaseAndCollection, user, newValues)
+                    alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is released to the wild!")
+                    
                     const variables = {
-                        operation: "Success",
-                        msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " removed successfully!", 
-                        url: back
+                        name: result.name, 
+                        team: await findTeamRemove(result, pokemon)
                     }
-                    response.render("confirmationMsg", variables)
+
+                    response.render("login", variables)
                 } else {
+                    alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not on your team!")
                     const variables = {
-                        operation: "Error",
-                        msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not in your team!", 
-                        url: back
+                        name: loginName, 
+                        team: await findTeamRemove(result, pokemon)
                     }
-                    response.render("confirmationMsg", variables)
+                    response.render("login", variables)
                 }
             } else {
+                alert("You don't have any Pokemon in your team!")
                 const variables = {
-                    operation: "Error", 
-                    msg: "You don't have any Pokemon in your team!", 
-                    url: back
+                    name: loginName, 
+                    team: await findTeam(result)
                 }
-                response.render("confirmationMsg", variables) 
+                response.render("login", variables)
             }
         }
     } catch (e) {
@@ -240,30 +227,19 @@ app.post("/lookUp", async (request, response) => {
         let result = await lookUpByUsername(client, databaseAndCollection, request.body.lookUp) 
         if (result) {
 
-            let msg = ""
-
-            for (let i = 0; i < result.team.length; i++) {
-                let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
-                const status = await fetch (url)
-                let pokedex = await status.json()
-                let src = pokedex.sprites.other.dream_world.front_default
-                let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
-                msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"150\" height=\"150\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
-            }
-
             const variables = {
                 operation: lookUp.charAt(0) + lookUp.slice(1) + "'s Team", 
-                msg: lookUp.charAt(0) + lookUp.slice(1) + "'s Team<br><br>" + msg, 
+                msg: lookUp.charAt(0) + lookUp.slice(1) + "'s Team<br><br>" + await findTeam(result), 
                 url: back
             }
-            response.render("confirmationMsg", variables) 
+            response.render("displayTeam", variables)   
         } else {
+            alert("User not found")
             const variables = {
-                operation: "Error", 
-                msg: "User not found!", 
-                url: back
+                name: loginName, 
+                team: await findTeam(signIn)
             }
-            response.render("confirmationMsg", variables) 
+            response.render("login", variables)
         }
     }
 })
@@ -274,26 +250,22 @@ app.post("/isAPokemon", async (request, response) => {
         let url = "https://pokeapi.co/api/v2/pokemon/" + pokemon
         await client.connect();
         let signIn = await lookUpByUsername(client, databaseAndCollection, user) 
-        let back = "http://localhost:5001/login?username=" + signIn.username + "&password=" + signIn.password
         let status = await fetch(url)
         
         if (status.status == 404 || status.statusText == "Not Found") {
+            alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!")
             const variables = {
-                operation: "Error",
-                msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!", 
-                url: back
+                name: loginName, 
+                team: await findTeam(signIn)
             }
-            response.render("confirmationMsg", variables)
+            response.render("login", variables)
         } else {
-            let pokedex = await status.json()
-            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"150\" height=\"150\"><br>" + "<p>" + pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!</p>"
-
+            alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is a Pokemon!")
             const variables = {
-                operation: "Success",
-                msg: msg, 
-                url: back
+                name: loginName, 
+                team: await findTeam(signIn)
             }
-            response.render("confirmationMsg", variables)
+            response.render("login", variables)
         }
     }
 })
@@ -308,14 +280,16 @@ app.post("/pokedex", async (request, response) => {
         let status = await fetch(url)
         
         if (status.status == 404 || status.statusText == "Not Found") {
+            alert(pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!")
             const variables = {
-                operation: "Error",
-                msg: pokemon.charAt(0).toUpperCase() + pokemon.slice(1) + " is not a Pokemon!", 
-                url: back
+                name: loginName, 
+                team: await findTeam(signIn)
             }
-            response.render("confirmationMsg", variables)
+            response.render("login", variables)
         } else {
             let pokedex = await status.json()
+            let msg = "<img src=\"" + pokedex.sprites.other.dream_world.front_default + "\" alt=\"" + pokedex.name + "\" width=\"300\" height=\"300\"><br>"
+
             let types = []
             
             pokedex.types.forEach(element => {
@@ -323,13 +297,17 @@ app.post("/pokedex", async (request, response) => {
             });
 
             const variables = {
-                img: pokedex.sprites.other.dream_world.front_default, 
+                img: msg, 
                 name: pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1), 
-                hp: pokedex.stats[0].base_stat + "/" + pokedex.stats[0].base_stat, 
+                hp: pokedex.stats[0].base_stat, 
+                attack: pokedex.stats[1].base_stat, 
+                defense: pokedex.stats[2].base_stat, 
+                speed: pokedex.stats[5].base_stat,
                 xp: pokedex.base_experience, 
+                ability: pokedex.abilities[0].ability.name.charAt(0).toUpperCase() + pokedex.abilities[0].ability.name.slice(1), 
                 types: types.join(' / '), 
-                weight: pokedex.weight + "kg", 
-                height: pokedex.weight + "m", 
+                weight: Math.round(pokedex.weight * 1000 * GRAMS_TO_POUNDS) / 10 + "kg", 
+                height: Math.floor((pokedex.height/10) * METER_TO_FEET) + "ft " + Math.round((((pokedex.height/10) * METER_TO_FEET) % 1).toFixed(2) * 10) + "in", 
                 url: back 
             }
             response.render("pokedex", variables)
@@ -337,7 +315,57 @@ app.post("/pokedex", async (request, response) => {
     }
 })
 
+async function findTeamAdd(result, pokemon) {
+    let msg = ""
+
+    for (let i = 0; i < result.team.length; i++) {
+        let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
+        const status = await fetch (url)  
+        let pokedex = await status.json()
+        let src = pokedex.sprites.other.dream_world.front_default
+        let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+        msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
+    }
+
+    let url = "https://pokeapi.co/api/v2/pokemon/" + pokemon
+    const status = await fetch (url)  
+    let pokedex = await status.json()
+    let src = pokedex.sprites.other.dream_world.front_default
+    let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+    msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
+
+    return msg + "<br><br>"
+}
+
+async function findTeam(result) {
+    let msg = ""
+
+    for (let i = 0; i < result.team.length; i++) {
+        let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
+        const status = await fetch (url)  
+        let pokedex = await status.json()
+        let src = pokedex.sprites.other.dream_world.front_default
+        let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+        msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
+    }
+
+    return msg + "<br><br>"
+}
  
+async function findTeamRemove(result, pokemon) {
+    let msg = ""
+    for (let i = 0; i < result.team.length; i++) {
+        if (result.team[i] != pokemon) {
+            let url = "https://pokeapi.co/api/v2/pokemon/" + result.team[i]
+            const status = await fetch (url)  
+            let pokedex = await status.json()
+            let src = pokedex.sprites.other.dream_world.front_default
+            let name = pokedex.name.charAt(0).toUpperCase() + pokedex.name.slice(1)
+            msg += "<figure style=\"display: inline-block\"><img src=\"" + src + "\" alt=\"" + name + "\" width=\"100\" height=\"100\"><figcaption style=\"text-align: center\">" + name + "</figcaption></figure>"
+        }
+    }
+    return msg + "<br><br>"
+}
 
 async function insertApp(client, databaseAndCollection, newApp) { 
     const result = await client.db(databaseAndCollection.db).collection(databaseAndCollection.collection).insertOne(newApp); 
