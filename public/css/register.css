@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url(../images/pokemonBackground.jpg) center fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+}
+.registerPageCenter{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px;
+    height: 560px;
+    background:white;
+    border-radius: 10px;
+}
+.registerPageCenter h1{
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 1px solid silver;
+}
+.registerPageCenter form{
+    padding: 0 40px;
+    box-sizing: content-box;
+}
+div.textField{
+    width: 510px;
+    display: inline-block;
+}
+#textFieldName{
+    width: 430px;
+}
+form .textField{
+    position: relative;
+    /* border-bottom: 2px solid #adadad; */
+    margin-top: 30px;
+}
+.textField input{
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    background: none;
+    outline: none;
+}
+.textField label{
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    color: #adadad;
+    transform: translateY(-30%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: .5s;
+}
+.textField span::before{
+    content: ' ';
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width:100%;
+    height: 2px;
+    background: #2691d9;
+}
+.textField input:focus ~ label,
+.textField input:valid ~ label{
+    top: -5px;
+    color: #2691d9;
+}
+
+.textField input:focus ~ span::before,
+.textField input:valid ~ span::before{
+    width: 100%;
+}
+
+#textFieldAge{
+    width: 55px;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#textFieldPassword{
+    margin-bottom: 50px;
+}
+
+input[type="submit"]{
+    width: 100%;
+    height: 50px;
+    border: 1px solid;
+    background: #2691d9;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+}
+input[type="submit"]:hover{
+    border-color: #2691d9;
+    transition: .5s;
+}
+.signup{
+    margin: 30px 0;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+}
+.signup a{
+    color: #2691d9;
+    text-decoration: none;
+}
+.signup a{
+    color: #2691d9;
+    text-decoration: none;
+}

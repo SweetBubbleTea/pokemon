@@ -3,26 +3,26 @@
 
 <head>
     <title>Pokedex</title>
+    <link href="/public/css/pokedex.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <div>
-        <%- img %>
-            <strong>Name: </strong><%- name %><br>
-                <strong>XP: </strong><%- xp %><br>
-                    <strong>HP: </strong><%- hp %><br>
-                        <strong>Attack: </strong><%- attack %><br>
-                            <strong>Defense: </strong><%- defense %><br>
-                                <strong>Speed: </strong><%- speed %><br>
-                                    <strong>Ability: </strong><%- ability %><br>
-                                        <strong>Types(s): </strong><%- types %><br>
-                                            <strong>Weight: </strong><%- weight %><br>
-                                                <strong>Height: </strong><%- height %><br>
+    <div class="pokedexPageCenter">
+        <div class="inner">
+            <%- img %>
+                <p><strong>Name: </strong><%- name %><br></p>
+                <p><strong>XP: </strong><%- xp %><br></p>
+                <p><strong>HP: </strong><%- hp %><br></p>
+                <p><strong>Attack: </strong><%- attack %><br></p>
+                <p><strong>Defense: </strong><%- defense %><br></p>
+                <p><strong>Speed: </strong><%- speed %><br></p>
+                <p><strong>Ability: </strong><%- ability %><br></p>
+                <p><strong>Types(s): </strong><%- types %><br></p>
+                <p><strong>Weight: </strong><%- weight %><br></p>
+                <p><strong>Height: </strong><%- height %><br></p>
+        </div>
+        <a href="<%- url %>" id="backButton">Back</a>
     </div>
-
-    <br>
-
-    <a href="<%- url %>">Back</a>
 </body>
 
 </html>
