@@ -4,7 +4,8 @@
   "description": "Team Members:      Andy Zhao (azhao21),      Mao Jun Qiu (mqiu) App Descrption:      This project is a web program running through node.js that allows you to personalize your pokemon team.  API Links:      https://pokeapi.co/docs/v2 YouTube Demo Link:",
   "main": "pokemon.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node pokemon.js"
   },
   "repository": {
     "type": "git",
